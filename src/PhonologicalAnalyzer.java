@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-
+/*
+ * Runs a phonological analysis on features of a language based on input words to see
+ * if the features are in complementary or contrastive distribution.
+ */
 public class PhonologicalAnalyzer {
 	private static final String CONSONANT_FILE = "consonants.txt";
 	private static final String VOWEL_FILE = "vowels.txt";
@@ -30,7 +33,8 @@ public class PhonologicalAnalyzer {
 		public String tenseness;
 		public String roundness;
 		
-		public Vowel(String symbol, String backness, String height, String tenseness, String roundness) {
+		public Vowel(String symbol, String backness, String height, String tenseness, 
+				String roundness) {
 			this.symbol = symbol;
 			this.backness = backness;
 			this.height = height;
@@ -39,7 +43,7 @@ public class PhonologicalAnalyzer {
 		}
 	}
 	
-	public static ArrayList<Consonant> parseConsonants() throws IOException {
+	private static ArrayList<Consonant> parseConsonants() throws IOException {
 		System.out.print("Parsing consonants...");
 		ArrayList<Consonant> results = new ArrayList<Consonant>();
 		BufferedReader br = new BufferedReader(new FileReader(CONSONANT_FILE));
@@ -53,7 +57,7 @@ public class PhonologicalAnalyzer {
 		return results;
 	}
 	
-	public static ArrayList<Vowel> parseVowels() throws IOException {
+	private static ArrayList<Vowel> parseVowels() throws IOException {
 		System.out.print("Parsing consonants...");
 		ArrayList<Vowel> results = new ArrayList<Vowel>();
 		BufferedReader br = new BufferedReader(new FileReader(VOWEL_FILE));
@@ -67,6 +71,65 @@ public class PhonologicalAnalyzer {
 		return results;
 	}
 	
+	private static ArrayList<String> parseWordFile(String filename) throws IOException {
+		ArrayList<String> words = new ArrayList<String>();
+		BufferedReader br = new BufferedReader(new FileReader(filename));
+		String line;
+		while((line = br.readLine()) != null) {
+			words.add(line);
+		}
+		br.close();
+		return words;
+		
+	}
+	
+	private static boolean detectMinimalPair(ArrayList<String> words, String feature1,
+			String feature2) {
+		int diffAllowed = 1;
+		for(int i = 0; i < words.size(); i++) {
+			String word1 = words.get(i);
+			outerloop:
+			for(int j = i + 1; j < words.size(); j++) {
+				String word2 = words.get(j);
+				int diff = 0;
+				
+				if(word1.length() == word2.length()) {
+					for(int k = 0; k < word1.length(); k++) {
+						if(word1.charAt(k) != word2.charAt(k)) {
+							if(word1.charAt(k) == feature1.charAt(0) && word2.charAt(k) == feature2.charAt(0) || 
+									word1.charAt(k) == feature2.charAt(0) && word2.charAt(k) == feature1.charAt(0)) {
+								diff++;
+								if(diff > diffAllowed) {
+									// break to next word2
+									continue outerloop;
+								}
+							} else {
+								// break to next word2
+								continue outerloop;
+							}
+						}
+					}
+					// return true
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	private static void runAnalysis(ArrayList<String> words, String feature1,
+			String feature2, ArrayList<Consonant> consonants,
+			ArrayList<Vowel> vowels) {
+		
+		// Step 1: if there's a minimal pair, constrasive
+		if(detectMinimalPair(words, feature1, feature2)) {
+			System.out.println("Contrastive distribution, minimal pair exists.");
+			return;
+		}
+		
+		
+	}
+
 	public static void main(String[] args) throws IOException {
 		boolean commandLine = false;
 		String filename = "";
@@ -95,8 +158,11 @@ public class PhonologicalAnalyzer {
 		ArrayList<Consonant> consonants = parseConsonants();
 		ArrayList<Vowel> vowels = parseVowels();
 		
+		ArrayList<String> words = parseWordFile(filename);
+		runAnalysis(words, feature1, feature2, consonants, vowels);		
 
 //		PrintStream out = new PrintStream(System.out, true, "UTF-8");
 //	    out.println();
 	}
+
 }
