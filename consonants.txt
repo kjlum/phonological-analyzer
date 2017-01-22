@@ -1,0 +1,24 @@
+p,bilabial,stop,voiceless
+b,bilabial,stop,voiced
+t,alveolar,stop,voiceless
+d,alveolar,stop,voiced
+k,velar,stop,voiceless
+ɡ,velar,stop,voiced
+ʔ,glottal,stop,voiceless
+m,bilabial,nasal,voiced
+n,alveolar,nasal,voiced
+ŋ,velar,nasal,voiced
+f,labiodental,fricative,voiceless
+v,labiodental,fricative,voiced
+θ,dental,fricative,voiceless
+ð,dental,fricative,voiced
+s,alveolar,fricative,voiceless
+z,alveolar,fricative,voiced
+ʃ,postalveolar,fricative,voiceless
+ʒ,postalveolar,fricative,voiced
+h,glottal,fricative,voiceless
+ɹ,alveolar,approximant,voiced
+j,palatal,approximant,voiced
+l,alveolar,lateral approximant,voiced
+w,bilabial,glide,voiced
+ʍ,bilabial,glide,voiceless

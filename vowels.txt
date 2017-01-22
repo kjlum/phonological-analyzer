@@ -1,0 +1,12 @@
+i,front,high,tense,unrounded
+ɪ,front,high,lax,unrounded
+e,front,mid,tense,unrounded
+ɛ,front,mid,lax,unrounded
+œ,front,low,lax,unrounded
+a,back,low,lax,unrounded
+ə,central,mid,lax,unrounded
+ʌ,central,mid,lax,unrounded
+ɔ,back,mid,lax,rounded
+o,back,mid,tense,rounded
+u,back,high,tense,rounded
+ʊ,back,high,lax,rounded
