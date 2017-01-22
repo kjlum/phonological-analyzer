@@ -97,6 +97,6 @@ public class PhonologicalAnalyzer {
 		
 
 //		PrintStream out = new PrintStream(System.out, true, "UTF-8");
-//	    out.println(parts[0]);
+//	    out.println();
 	}
 }
