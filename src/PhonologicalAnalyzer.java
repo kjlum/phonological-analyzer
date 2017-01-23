@@ -16,37 +16,10 @@ public class PhonologicalAnalyzer {
 	private static final String BLANK_ENVIRONMENT = "";
 	private static final String INITIALIZED_ENVIRONMENT = "INIT";
 	
-	static class Consonant {
-		public String symbol;
-		public String place;
-		public String manner;
-		public String voicing;
-		
-		public Consonant(String symbol, String place, String manner, String voicing) {
-			this.symbol = symbol;
-			this.place = place;
-			this.manner = manner;
-			this.voicing = voicing;
-		}
-	}
-	
-	static class Vowel {
-		public String symbol;
-		public String backness;
-		public String height;
-		public String tenseness;
-		public String roundness;
-		
-		public Vowel(String symbol, String backness, String height, String tenseness, 
-				String roundness) {
-			this.symbol = symbol;
-			this.backness = backness;
-			this.height = height;
-			this.tenseness = tenseness;
-			this.roundness = roundness;
-		}
-	}
-	
+	/*
+	 * Parses the consonants file.
+	 * Returns a map of consonants to their linguistic properties.
+	 */
 	private static HashMap<String, Consonant> parseConsonants() throws IOException {
 		System.out.print("Parsing consonants...");
 		HashMap<String, Consonant> results = new HashMap<String, Consonant>();
@@ -61,6 +34,10 @@ public class PhonologicalAnalyzer {
 		return results;
 	}
 	
+	/*
+	 * Parses the vowels file.
+	 * Returns a map of vowels to their linguistic properties.
+	 */
 	private static HashMap<String, Vowel> parseVowels() throws IOException {
 		System.out.print("Parsing consonants...");
 		HashMap<String, Vowel> results = new HashMap<String, Vowel>();
@@ -75,7 +52,11 @@ public class PhonologicalAnalyzer {
 		return results;
 	}
 	
-	private static ArrayList<String> parseWordFile(String filename) throws IOException {
+	/*
+	 * Parses the input words to analyze.
+	 * Returns a list of words.
+	 */
+	public static ArrayList<String> parseWordFile(String filename) throws IOException {
 		ArrayList<String> words = new ArrayList<String>();
 		BufferedReader br = new BufferedReader(new FileReader(filename));
 		String line;
@@ -87,7 +68,11 @@ public class PhonologicalAnalyzer {
 		
 	}
 	
-	private static boolean detectMinimalPair(ArrayList<String> words, String feature1,
+	/*
+	 * Detects minimal pairs among the provided words, where the pair(s) differ by the provided features.
+	 * Returns the first minimal pair found, or null.
+	 */
+	public static MinimalPair detectMinimalPair(ArrayList<String> words, String feature1,
 			String feature2) {
 		int diffAllowed = 1;
 		for(int i = 0; i < words.size(); i++) {
@@ -114,14 +99,18 @@ public class PhonologicalAnalyzer {
 						}
 					}
 					// return true
-					return true;
+					return new MinimalPair(word1, word2);
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 	
-	private static boolean detectEnvironmentOverlap(ArrayList<String> words,
+	/*
+	 * Detects environment overlap between two features based on the provided words.
+	 * Returns true if overlap is detected, false otherwise.
+	 */
+	public static boolean detectEnvironmentOverlap(ArrayList<String> words,
 			String feature1, String feature2, HashMap<String, Consonant> consonants, HashMap<String, Vowel> vowels) {
 		// feature 1
 		HashSet<String> prior = new HashSet<String>();
@@ -299,12 +288,15 @@ public class PhonologicalAnalyzer {
 		return false;
 	}
 	
+	/*
+	 * Runs our phonological analysis in order.
+	 */
 	private static void runAnalysis(ArrayList<String> words, String feature1,
 			String feature2, HashMap<String, Consonant> consonants,
 			HashMap<String, Vowel> vowels) {
 		
 		// Step 1: if there's a minimal pair, constrasive
-		if(detectMinimalPair(words, feature1, feature2)) {
+		if(detectMinimalPair(words, feature1, feature2) != null) {
 			System.out.println("Contrastive distribution, minimal pair exists.");
 			return;
 		}

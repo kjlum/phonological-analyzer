@@ -22,3 +22,4 @@ j,palatal,approximant,voiced
 l,alveolar,lateral approximant,voiced
 w,bilabial,glide,voiced
 ʍ,bilabial,glide,voiceless
+x,velar,fricative,voiceless
