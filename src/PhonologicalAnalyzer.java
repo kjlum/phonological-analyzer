@@ -110,7 +110,7 @@ public class PhonologicalAnalyzer {
 	 * Detects environment overlap between two features based on the provided words.
 	 * Returns true if overlap is detected, false otherwise.
 	 */
-	public static boolean detectEnvironmentOverlap(ArrayList<String> words,
+	public static Environment detectEnvironmentOverlap(ArrayList<String> words,
 			String feature1, String feature2, HashMap<String, Consonant> consonants, HashMap<String, Vowel> vowels) {
 		// feature 1
 		HashSet<String> prior = new HashSet<String>();
@@ -159,8 +159,8 @@ public class PhonologicalAnalyzer {
 		}
 		
 		// see if prior environments overlap by placing identical features together in a Consonant and Vowel
-		Consonant priorConsonant = new Consonant(BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT);
-		Vowel priorVowel = new Vowel(BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT);
+		Consonant similarConsonant = new Consonant(BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT);
+		Vowel similarVowel = new Vowel(BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT);
 		boolean priorContainsWordBoundary = false;
 		int nonNullPriorConsonantFeatures = 0;
 		int nonNullPriorVowelFeatures = 0;
@@ -168,44 +168,44 @@ public class PhonologicalAnalyzer {
 			if(consonants.keySet().contains(feature)) {
 				// feature is a consonant
 				Consonant c = consonants.get(feature);
-				if(priorConsonant.symbol == BLANK_ENVIRONMENT) {
-					priorConsonant = new Consonant(INITIALIZED_ENVIRONMENT, c.place, c.manner, c.voicing);
+				if(similarConsonant.symbol == BLANK_ENVIRONMENT) {
+					similarConsonant = new Consonant(INITIALIZED_ENVIRONMENT, c.place, c.manner, c.voicing);
 					nonNullPriorConsonantFeatures = 3;
 				} else {
-					if(priorConsonant.place != null && priorConsonant.place != c.place) {
-						priorConsonant.place = null;
+					if(similarConsonant.place != null && !similarConsonant.place.equals(c.place)) {
+						similarConsonant.place = null;
 						nonNullPriorConsonantFeatures--;
 					}
-					if(priorConsonant.manner != null && priorConsonant.manner != c.manner) {
-						priorConsonant.manner = null;
+					if(similarConsonant.manner != null && !similarConsonant.manner.equals(c.manner)) {
+						similarConsonant.manner = null;
 						nonNullPriorConsonantFeatures--;
 					}
-					if(priorConsonant.voicing != null && priorConsonant.voicing != c.voicing) {
-						priorConsonant.voicing = null;
+					if(similarConsonant.voicing != null && !similarConsonant.voicing.equals(c.voicing)) {
+						similarConsonant.voicing = null;
 						nonNullPriorConsonantFeatures--;
 					}
 				}
 			} else if(vowels.keySet().contains(feature)) {
 				// feature is a vowel
 				Vowel v = vowels.get(feature);
-				if(priorVowel.symbol == BLANK_ENVIRONMENT) {
-					priorVowel = new Vowel(INITIALIZED_ENVIRONMENT, v.backness, v.height, v.tenseness, v.roundness);
+				if(similarVowel.symbol == BLANK_ENVIRONMENT) {
+					similarVowel = new Vowel(INITIALIZED_ENVIRONMENT, v.backness, v.height, v.tenseness, v.roundness);
 					nonNullPriorVowelFeatures = 4;
 				} else {
-					if(priorVowel.backness != null && priorVowel.backness != v.backness) {
-						priorVowel.backness = null;
+					if(similarVowel.backness != null && !similarVowel.backness.equals(v.backness)) {
+						similarVowel.backness = null;
 						nonNullPriorVowelFeatures--;
 					}
-					if(priorVowel.height != null && priorVowel.height != v.height) {
-						priorVowel.height = null;
+					if(similarVowel.height != null && !similarVowel.height.equals(v.height)) {
+						similarVowel.height = null;
 						nonNullPriorVowelFeatures--;
 					}
-					if(priorVowel.tenseness != null && priorVowel.tenseness != v.tenseness) {
-						priorVowel.tenseness = null;
+					if(similarVowel.tenseness != null && !similarVowel.tenseness.equals(v.tenseness)) {
+						similarVowel.tenseness = null;
 						nonNullPriorVowelFeatures--;
 					}
-					if(priorVowel.roundness != null && priorVowel.roundness != v.roundness) {
-						priorVowel.roundness = null;
+					if(similarVowel.roundness != null && !similarVowel.roundness.equals(v.roundness)) {
+						similarVowel.roundness = null;
 						nonNullPriorVowelFeatures--;
 					}
 					
@@ -218,55 +218,45 @@ public class PhonologicalAnalyzer {
 		}
 		
 		// see if post environments overlap by placing identical features together in a Consonant and Vowel
-		Consonant postConsonant = new Consonant(BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT);
-		Vowel postVowel = new Vowel(BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT);
+//		Consonant postConsonant = new Consonant(BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT);
+//		Vowel postVowel = new Vowel(BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT);
 		boolean postContainsWordBoundary = false;
-		int nonNullPostConsonantFeatures = 0;
-		int nonNullPostVowelFeatures = 0;
+		int nonNullPostConsonantFeatures = 3;
+		int nonNullPostVowelFeatures = 4;
 		for(String feature : post) {
 			if(consonants.keySet().contains(feature)) {
 				// feature is a consonant
 				Consonant c = consonants.get(feature);
-				if(postConsonant.symbol == BLANK_ENVIRONMENT) {
-					postConsonant = new Consonant(INITIALIZED_ENVIRONMENT, c.place, c.manner, c.voicing);
-					nonNullPostConsonantFeatures = 3;
-				} else {
-					if(postConsonant.place != null && postConsonant.place != c.place) {
-						postConsonant.place = null;
-						nonNullPostConsonantFeatures--;
-					}
-					if(postConsonant.manner != null && postConsonant.manner != c.manner) {
-						postConsonant.manner = null;
-						nonNullPostConsonantFeatures--;
-					}
-					if(postConsonant.voicing != null && postConsonant.voicing != c.voicing) {
-						postConsonant.voicing = null;
-						nonNullPostConsonantFeatures--;
-					}
+				if(similarConsonant.place != null && !similarConsonant.place.equals(c.place)) {
+					similarConsonant.place = null;
+					nonNullPostConsonantFeatures--;
+				}
+				if(similarConsonant.manner != null && !similarConsonant.manner.equals(c.manner)) {
+					similarConsonant.manner = null;
+					nonNullPostConsonantFeatures--;
+				}
+				if(similarConsonant.voicing != null && !similarConsonant.voicing.equals(c.voicing)) {
+					similarConsonant.voicing = null;
+					nonNullPostConsonantFeatures--;
 				}
 			} else if(vowels.keySet().contains(feature)) {
 				// feature is a vowel
 				Vowel v = vowels.get(feature);
-				if(postVowel.symbol == BLANK_ENVIRONMENT) {
-					postVowel = new Vowel(INITIALIZED_ENVIRONMENT, v.backness, v.height, v.tenseness, v.roundness);
-					nonNullPostVowelFeatures = 4;
-				} else {
-					if(postVowel.backness != null && postVowel.backness != v.backness) {
-						postVowel.backness = null;
-						nonNullPostVowelFeatures--;
-					}
-					if(postVowel.height != null && postVowel.height != v.height) {
-						postVowel.height = null;
-						nonNullPostVowelFeatures--;
-					}
-					if(postVowel.tenseness != null && postVowel.tenseness != v.tenseness) {
-						postVowel.tenseness = null;
-						nonNullPostVowelFeatures--;
-					}
-					if(postVowel.roundness != null && postVowel.roundness != v.roundness) {
-						postVowel.roundness = null;
-						nonNullPostVowelFeatures--;
-					}
+				if(similarVowel.backness != null && !similarVowel.backness.equals(v.backness)) {
+					similarVowel.backness = null;
+					nonNullPostVowelFeatures--;
+				}
+				if(similarVowel.height != null && !similarVowel.height.equals(v.height)) {
+					similarVowel.height = null;
+					nonNullPostVowelFeatures--;
+				}
+				if(similarVowel.tenseness != null && !similarVowel.tenseness.equals(v.tenseness)) {
+					similarVowel.tenseness = null;
+					nonNullPostVowelFeatures--;
+				}
+				if(similarVowel.roundness != null && !similarVowel.roundness.equals(v.roundness)) {
+					similarVowel.roundness = null;
+					nonNullPostVowelFeatures--;
 				}
 			} else if(feature.equals("#")) {
 				postContainsWordBoundary = true;
@@ -275,17 +265,31 @@ public class PhonologicalAnalyzer {
 			}
 		}
 		
-		// overlap in prior?
-		if(nonNullPriorConsonantFeatures > 0 && nonNullPostConsonantFeatures > 0) {
-			// TODO: word boundary logic; possibly add onlyWordBoundaries check?
-			return true;
-		}
-		// overlap in post?
-		if(nonNullPriorVowelFeatures > 0 && nonNullPostVowelFeatures > 0) {
-			return true;
+		// overlap?
+		if(nonNullPriorConsonantFeatures > 0 && nonNullPostConsonantFeatures > 0 ||
+				nonNullPriorVowelFeatures > 0 && nonNullPostVowelFeatures > 0) {
+			// TODO: right now, a feature that is preceded by a consonant in one word and a vowel in all other
+			// registers as overlapping environments because similarConsonant's properties never become null
+			return new Environment(similarConsonant, similarVowel, priorContainsWordBoundary, postContainsWordBoundary);
 		}
 		// no overlap
-		return false;
+		return null;
+	}
+
+	private static void formPhonologicalRule(Environment e) {
+		Consonant c = e.consonant;
+		String consonantTraits = "";
+		if(c.place != null) {
+			consonantTraits += c.place + " ";
+		}
+		if(c.manner != null) {
+			consonantTraits += c.manner + " ";
+		}
+		if(c.voicing != null) {
+			consonantTraits += c.voicing + " ";
+		}
+		System.out.println(consonantTraits);
+		
 	}
 	
 	/*
@@ -296,20 +300,24 @@ public class PhonologicalAnalyzer {
 			HashMap<String, Vowel> vowels) {
 		
 		// Step 1: if there's a minimal pair, constrasive
-		if(detectMinimalPair(words, feature1, feature2) != null) {
-			System.out.println("Contrastive distribution, minimal pair exists.");
+		MinimalPair mp = detectMinimalPair(words, feature1, feature2);
+		if(mp != null) {
+			System.out.println("Contrastive distribution, minimal pair exists:");
+			System.out.println(mp.word1 + " " + mp.word2);
 			return;
 		}
 		// Step 2: list phonetic environments; see if there is overlap (contrastive)
-		if(detectEnvironmentOverlap(words, feature1, feature2, consonants, vowels)) {
+		Environment e = detectEnvironmentOverlap(words, feature1, feature2, consonants, vowels);
+		if(e != null) {
 			System.out.println("Contrastive distribution, environments overlap.");
+			//return;
 		}
-		// TODO: 3. complementary; write rule
-		
+		// Step 3: complementary; write rule
+		System.out.println("Complementary distribution.");
+		formPhonologicalRule(e);
 	}
 
 	public static void main(String[] args) throws IOException {
-		boolean commandLine = false;
 		String filename = "";
 		String feature1 = "";
 		String feature2 = "";
@@ -323,7 +331,6 @@ public class PhonologicalAnalyzer {
 			System.out.print("Feature 2: ");
 			feature2 = scanner.next();
 		} else if(args.length == 3){
-			commandLine = true;
 			filename = args[0];
 			feature1 = args[1];
 			feature2 = args[2];
