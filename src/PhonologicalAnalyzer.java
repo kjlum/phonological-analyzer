@@ -20,7 +20,7 @@ public class PhonologicalAnalyzer {
 	 * Parses the consonants file.
 	 * Returns a map of consonants to their linguistic properties.
 	 */
-	private static HashMap<String, Consonant> parseConsonants() throws IOException {
+	public static HashMap<String, Consonant> parseConsonants() throws IOException {
 		System.out.print("Parsing consonants...");
 		HashMap<String, Consonant> results = new HashMap<String, Consonant>();
 		BufferedReader br = new BufferedReader(new FileReader(CONSONANT_FILE));
@@ -38,8 +38,8 @@ public class PhonologicalAnalyzer {
 	 * Parses the vowels file.
 	 * Returns a map of vowels to their linguistic properties.
 	 */
-	private static HashMap<String, Vowel> parseVowels() throws IOException {
-		System.out.print("Parsing consonants...");
+	public static HashMap<String, Vowel> parseVowels() throws IOException {
+		System.out.print("Parsing vowels...");
 		HashMap<String, Vowel> results = new HashMap<String, Vowel>();
 		BufferedReader br = new BufferedReader(new FileReader(VOWEL_FILE));
 		String line;
@@ -106,7 +106,7 @@ public class PhonologicalAnalyzer {
 		return null;
 	}
 
-	private static void getEnvironments(HashSet<String> prior,
+	public static void getEnvironments(HashSet<String> prior,
 			HashSet<String> post, ArrayList<String> words, String feature) {
 		for(int i = 0; i < words.size(); i++) {
 			String word = words.get(i);
@@ -131,7 +131,7 @@ public class PhonologicalAnalyzer {
 		
 	}
 
-	private static Consonant getSimilarConsonant(HashMap<String, Consonant> consonants, HashSet<String> prior) {
+	public static Consonant getSimilarConsonant(HashMap<String, Consonant> consonants, HashSet<String> prior) {
 		Consonant similarConsonant = new Consonant(BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT);
 		int nonNullPriorConsonantFeatures = 0;
 		for(String feature : prior) {
@@ -159,7 +159,7 @@ public class PhonologicalAnalyzer {
 				return null;
 			}
 		}
-		
+
 		if(nonNullPriorConsonantFeatures > 0) {
 			return similarConsonant;
 		}
@@ -168,7 +168,7 @@ public class PhonologicalAnalyzer {
 	}
 	
 
-	private static Vowel getSimilarVowel(HashMap<String, Vowel> vowels,
+	public static Vowel getSimilarVowel(HashMap<String, Vowel> vowels,
 			HashSet<String> prior) {
 		Vowel similarVowel = new Vowel(BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT, BLANK_ENVIRONMENT);
 		int nonNullPriorVowelFeatures = 0;
@@ -209,7 +209,7 @@ public class PhonologicalAnalyzer {
 		return null;
 	}
 	
-	private static boolean containsWordBoundary(HashSet<String> prior) {
+	public static boolean containsWordBoundary(HashSet<String> prior) {
 		for(String feature : prior) {
 			if(feature.equals("#")) {
 				return true;
@@ -255,22 +255,6 @@ public class PhonologicalAnalyzer {
 		// no overlap
 		return null;
 	}
-
-	private static void formPhonologicalRule(Environment e) {
-		Consonant c = e.consonant;
-		String consonantTraits = "";
-		if(c.place != null) {
-			consonantTraits += c.place + " ";
-		}
-		if(c.manner != null) {
-			consonantTraits += c.manner + " ";
-		}
-		if(c.voicing != null) {
-			consonantTraits += c.voicing + " ";
-		}
-		System.out.println(consonantTraits);
-		
-	}
 	
 	/*
 	 * Runs our phonological analysis in order.
@@ -295,7 +279,6 @@ public class PhonologicalAnalyzer {
 		}
 		// Step 3: complementary; write rule
 		System.out.println("Complementary distribution.");
-		formPhonologicalRule(e);
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -326,9 +309,6 @@ public class PhonologicalAnalyzer {
 		
 		ArrayList<String> words = parseWordFile(filename);
 		runAnalysis(words, feature1, feature2, consonants, vowels);		
-
-//		PrintStream out = new PrintStream(System.out, true, "UTF-8");
-//	    out.println();
 	}
 
 }

@@ -3,7 +3,7 @@ b,bilabial,stop,voiced
 t,alveolar,stop,voiceless
 d,alveolar,stop,voiced
 k,velar,stop,voiceless
-ɡ,velar,stop,voiced
+g,velar,stop,voiced
 ʔ,glottal,stop,voiceless
 m,bilabial,nasal,voiced
 n,alveolar,nasal,voiced
