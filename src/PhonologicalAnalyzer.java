@@ -290,6 +290,7 @@ public class PhonologicalAnalyzer {
 		Environment e = detectEnvironmentOverlap(words, feature1, feature2, consonants, vowels);
 		if(e != null) {
 			System.out.println("Contrastive distribution, environments overlap.");
+			e.printOverlap();
 			return;
 		}
 		// Step 3: complementary; write rule

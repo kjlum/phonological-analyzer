@@ -11,4 +11,33 @@ public class Environment {
 		vowel = v;
 		this.containsWordBoundary = containsWordBoundary;
 	}
+	
+	public void printOverlap() {
+		if(consonant != null) {
+			System.out.print("Consonant: ");
+			if(consonant.place != null) {
+				System.out.print(consonant.place + " ");
+			}
+			if(consonant.manner != null) {
+				System.out.print(consonant.manner + " ");
+			}
+			if(consonant.voicing != null) {
+				System.out.print(consonant.voicing + " ");
+			}
+		} else if(vowel != null) {
+			System.out.print("Vowel: ");
+			if(vowel.backness != null) {
+				System.out.print(vowel.backness + " ");
+			}
+			if(vowel.height != null) {
+				System.out.print(vowel.height + " ");
+			}
+			if(vowel.tenseness != null) {
+				System.out.print(vowel.tenseness + " ");
+			}
+			if(vowel.roundness != null) {
+				System.out.print(vowel.roundness + " ");
+			}
+		}
+	}
 }
